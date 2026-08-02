@@ -6,11 +6,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 HANDBOOK_PATH = BASE_DIR / "handbook" / "handbook.pdf"
 
-CHROMA_PATH = os.path.join(BASE_DIR, "chroma_db")
+CHROMA_PATH = BASE_DIR / "chroma_db"
 
-EMBEDDING_MODEL = "all-MiniLM-L6-v2"
+load_dotenv(BASE_DIR / ".env")
 
-OLLAMA_MODEL = "llama3.2"
+OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", "llama3.2")
+EMBEDDING_MODEL = os.getenv("EMBEDDING_MODEL", "all-MiniLM-L6-v2")
 
 CHUNK_SIZE = 500
 
