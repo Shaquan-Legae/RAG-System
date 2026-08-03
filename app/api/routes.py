@@ -5,7 +5,11 @@ from app.models.request_models import QuestionRequest
 from app.services.pdf_loader import load_handbook
 from app.services.rag import answer_question
 from app.services.text_splitter import split_documents
-from app.services.vectorstore import create_vectorstore, load_vectorstore
+from app.services.vectorstore import (
+    create_vectorstore,
+    delete_vectorstore,
+    load_vectorstore,
+)
 
 router = APIRouter()
 
@@ -47,6 +51,7 @@ def reload_index() -> dict[str, str]:
         raise HTTPException(status_code=404, detail=str(error)) from error
 
     chunks = split_documents(documents)
+    delete_vectorstore()
     create_vectorstore(chunks)
 
     return {"message": "Handbook reloaded successfully."}
