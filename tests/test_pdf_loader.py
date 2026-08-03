@@ -1,17 +1,21 @@
-from pathlib import Path
-import pytest
+from app.config import HANDBOOK_PATH
+from app.services.pdf_loader import load_handbook
 
 
 def test_handbook_pdf_exists():
-    handbook_path = Path("handbook") / "handbook.pdf"
-    assert handbook_path.exists(), "handbook.pdf should exist in the handbook folder"
+    assert HANDBOOK_PATH.exists(), f"Handbook not found: {HANDBOOK_PATH}"
 
 
-def test_load_pdf_todo():
-    pytest.skip("TODO: implement app.services.pdf_loader.load_pdf and test PDF loading behavior")
+def test_load_handbook_returns_list():
+    documents = load_handbook()
+    assert isinstance(documents, list)
 
 
-def test_pdf_documents_todo():
-    pytest.skip(
-        "TODO: once load_pdf is implemented, verify the document list is not empty and each document contains text"
-    )
+def test_load_handbook_list_not_empty():
+    documents = load_handbook()
+    assert len(documents) > 0
+
+
+def test_first_document_contains_text():
+    documents = load_handbook()
+    assert documents[0].page_content.strip()
