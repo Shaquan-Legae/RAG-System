@@ -1,6 +1,34 @@
-"""Vector store service."""
+from typing import List
+
+from langchain_chroma import Chroma
+from langchain_core.documents import Document
+
+from app.config import CHROMA_PATH
+from app.services.embeddings import get_embeddings
 
 
-def build_vectorstore(embeddings: list[float], path: str):
-    """Build or load a vector store for retrieval."""
-    pass
+def create_vectorstore(chunks: List[Document]) -> Chroma:
+    """Create a persistent Chroma database from document chunks."""
+
+    embeddings = get_embeddings()
+
+    vectorstore = Chroma.from_documents(
+        documents=chunks,
+        embedding=embeddings,
+        persist_directory=str(CHROMA_PATH),
+    )
+
+    return vectorstore
+
+
+def load_vectorstore() -> Chroma:
+    """Load an existing Chroma database from disk."""
+
+    embeddings = get_embeddings()
+
+    vectorstore = Chroma(
+        persist_directory=str(CHROMA_PATH),
+        embedding_function=embeddings,
+    )
+
+    return vectorstore
