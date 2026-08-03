@@ -1,6 +1,12 @@
-"""Language model service."""
+import ollama
+
+from app.config import OLLAMA_MODEL
 
 
-def generate_answer(prompt: str, model: str):
-    """Generate a response from a language model."""
-    pass
+def generate_response(prompt: str) -> str:
+    """Send a prompt to Ollama and return the generated response text."""
+
+    response = ollama.generate(model=OLLAMA_MODEL, prompt=prompt)
+    text = response.response or ""
+
+    return text
