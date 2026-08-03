@@ -1,6 +1,11 @@
-"""Embedding generation service."""
+from langchain_huggingface import HuggingFaceEmbeddings
+
+from app.config import EMBEDDING_MODEL
 
 
-def create_embeddings(texts: list[str], model: str):
-    """Convert text into vector embeddings."""
-    pass
+def get_embeddings() -> HuggingFaceEmbeddings:
+    """Load and return the HuggingFace embedding model."""
+
+    embeddings = HuggingFaceEmbeddings(model_name=EMBEDDING_MODEL)
+
+    return embeddings
