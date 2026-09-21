@@ -16,3 +16,7 @@ EMBEDDING_MODEL = os.getenv("EMBEDDING_MODEL", "all-MiniLM-L6-v2")
 CHUNK_SIZE = 500
 
 CHUNK_OVERLAP = 100
+
+ZAIO_URL = os.getenv("ZAIO_URL", "https://www.zaio.io")
+
+SCORE_THRESHOLD = float(os.getenv("SCORE_THRESHOLD", "1.45"))

@@ -1,31 +1,38 @@
+from typing import Optional, Tuple
+
 from app.services.llm import generate_response
 from app.services.retriever import retrieve_documents
+from app.utils.source_formatter import format_source
 
-NOT_FOUND_MESSAGE = "I could not find that information in the handbook."
+NOT_FOUND_MESSAGE = "I could not find that information in the available knowledge base."
 
 
-def answer_question(question: str) -> str:
-    """Answer a question using retrieved handbook context and Ollama."""
+def answer_question(question: str) -> Tuple[str, Optional[str]]:
+    """Answer a question using retrieved context and Ollama, returning (answer, source)."""
 
     documents = retrieve_documents(question)
 
     if not documents:
-        return NOT_FOUND_MESSAGE
+        return NOT_FOUND_MESSAGE, None
+
+    # Primary source is the top-ranked retrieved document
+    primary_source = format_source(documents[0])
 
     context = "\n\n".join(document.page_content for document in documents)
 
     prompt = (
-        "You are an assistant answering questions about a university handbook.\n\n"
-        "Use ONLY the information provided below.\n\n"
-        "If the answer cannot be found in the context, reply:\n\n"
-        f"\"{NOT_FOUND_MESSAGE}\"\n\n"
-        "Context:\n\n"
-        f"{context}\n\n"
-        "Question:\n\n"
-        f"{question}\n\n"
+        "Answer the question directly based only on the provided context below. "
+        "Do not include conversational filler or assumed information. "
+        f"If the answer cannot be found in the context, reply exactly with: \"{NOT_FOUND_MESSAGE}\"\n\n"
+        f"Context:\n{context}\n\n"
+        f"Question:\n{question}\n\n"
         "Answer:"
     )
 
-    answer = generate_response(prompt)
+    answer = generate_response(prompt).strip()
 
-    return answer
+    if NOT_FOUND_MESSAGE.lower() in answer.lower():
+        return NOT_FOUND_MESSAGE, None
+
+    return answer, primary_source
+

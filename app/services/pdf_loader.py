@@ -31,5 +31,11 @@ def load_handbook() -> List[Document]:
 
     for document in documents:
         document.page_content = _normalize_text(document.page_content)
+        page_num = document.metadata.get("page", 0) + 1
+        document.metadata = {
+            "source_type": "handbook",
+            "source_name": "Student Handbook",
+            "page": page_num,
+        }
 
     return documents
