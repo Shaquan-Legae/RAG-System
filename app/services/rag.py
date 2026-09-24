@@ -21,7 +21,8 @@ def answer_question(question: str) -> Tuple[str, Optional[str]]:
     context = "\n\n".join(document.page_content for document in documents)
 
     prompt = (
-        "Answer the question directly based only on the provided context below. "
+        "Answer the question directly in concise continuous text based only on the provided context below. "
+        "Do not use bullet points or newline characters. "
         "Do not include conversational filler or assumed information. "
         f"If the answer cannot be found in the context, reply exactly with: \"{NOT_FOUND_MESSAGE}\"\n\n"
         f"Context:\n{context}\n\n"
